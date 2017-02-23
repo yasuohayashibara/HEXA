@@ -12,10 +12,11 @@
 
 using namespace Eigen;
 
-static const double LINK1_LEN = 0.3;
-static const double LINK2_LEN = 0.6;
-static const double STAGE_SIDE = 0.1;
-static const double BASE_LEN = 0.3;
+static const double LINK1_LEN  = 0.1435;
+static const double LINK2_LEN  = 0.462;
+static const double STAGE_SIDE = 0.060;
+static const double BASE_LEN   = 0.052;
+static const double INITIAL_HEIGHT = 0.5;
 static double cam_ang_h = 1.0;
 static double cam_ang_v = 1.0;
 static double cam_len = 15.0;
@@ -246,7 +247,7 @@ void keyboard(unsigned char key, int x, int y)
 		case '/': stage_pos[4] -= 0.01; break;
 		case 'l': stage_pos[5] += 0.01; break;
 		case ':': stage_pos[5] -= 0.01; break;
-		case ']': stage_pos << 0,0,0.7,0,0,0; break;
+		case ']': stage_pos << 0,0,INITIAL_HEIGHT,0,0,0; break;
 		default: is_push_key = false; break;
 	}
 	if (is_push_key){
@@ -277,7 +278,7 @@ void keyboard(unsigned char key, int x, int y)
 		default: break;
 	}
 
-	if (_finite(prevPos(1,1)) != 0) prevPos<< 0,0,0.7,0,0,0;
+	if (_finite(prevPos(1,1)) != 0) prevPos<< 0,0,INITIAL_HEIGHT,0,0,0;
 	kinematics(angle, prevPos);
 	calcArmPos(angle, x1);
 	calcStageJointPos(prevPos, s);
@@ -297,7 +298,7 @@ void myinit(void)
 	b[4] = rot240 * b[0];
 	b[5] = rot240 * b[1];
 
-	stage_pos.z() = 0.7;
+	stage_pos.z() = INITIAL_HEIGHT;
 	prevPos = stage_pos;
 	inv_kinematics(stage_pos, angle);
 	keyboard(0, 0, 0);
